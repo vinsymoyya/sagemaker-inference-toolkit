@@ -72,7 +72,8 @@ def test_write_file_mode(with_open):
 
 
 @pytest.mark.parametrize(
-    "content_type_key", ["Content-Type", "Content-type", "content-type", "ContentType"]
+    "content_type_key",
+    ["Content-Type", "Content-type", "content-type", "ContentType", "CONTENT-TYPE", "cOnTeNt-TyPe"],
 )
 def test_content_type_header(content_type_key):
     request_property = {content_type_key: CONTENT_TYPE}
@@ -80,6 +81,16 @@ def test_content_type_header(content_type_key):
     result = retrieve_content_type_header(request_property)
 
     assert result == CONTENT_TYPE
+
+
+def test_content_type_header_ignores_prefix_matches():
+    request_property = {"Content-Type-Options": "nosniff", "Content-Type": CONTENT_TYPE}
+
+    assert retrieve_content_type_header(request_property) == CONTENT_TYPE
+
+
+def test_content_type_header_requires_complete_name():
+    assert retrieve_content_type_header({"Content-Type-Options": "nosniff"}) is None
 
 
 @pytest.mark.parametrize(

@@ -17,7 +17,7 @@ from __future__ import absolute_import
 
 import re
 
-CONTENT_TYPE_REGEX = re.compile("^[Cc]ontent-?[Tt]ype")
+CONTENT_TYPE_REGEX = re.compile(r"\Acontent-?type\Z", re.IGNORECASE)
 
 
 def read_file(path, mode="r"):
